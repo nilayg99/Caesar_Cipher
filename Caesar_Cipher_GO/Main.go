@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	char_values = " '~`!@#$%^&*()+_-={}|[]:;,./<>?ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"
+	char_values = "'~`!@#$%^&*()+_-={}|[]:;,./<>?ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"
 	shift       = 3
 )
 
@@ -35,11 +35,33 @@ func play_again() {
 		}
 	}
 }
-func encrypt_text(ecrypt_text string, shift int) {
-	for _, char := range ecrypt_text {
-
+func encrypt_text(text string, shift int) string {
+	var result strings.Builder
+	for _, char := range text {
+		index := strings.IndexRune(char_values, char)
+		if index != -1 {
+			new_index := (index + shift) % len(char_values)
+			result.WriteByte(char_values[new_index])
+		} else {
+			result.WriteRune(char)
+		}
 	}
+	return result.String()
 
+}
+
+func decrypt_text(text string, shift int) string {
+	var result strings.Builder
+	for _, char := range text {
+		index := strings.IndexRune(char_values, char)
+		if index != -1 {
+			new_index := (index - shift + len(char_values)) % len(char_values)
+			result.WriteByte(char_values[new_index])
+		} else {
+			result.WriteRune(char)
+		}
+	}
+	return result.String()
 }
 
 func main() {
@@ -55,19 +77,28 @@ func main() {
 		user_input_lower := strings.ToLower(user_input)
 		if user_input_lower == "e" {
 			fmt.Println("Type the word you want to encrypt : ")
-			ecrypt_text := ""
-			_, err := fmt.Scanln(&ecrypt_text)
+			decrypt_text_input := ""
+			_, err := fmt.Scanln(&decrypt_text_input)
 			if err != nil {
 				fmt.Println("Error : ", err)
 			}
-			encrypt_text(ecrypt_text, shift)
+			encrypted := encrypt_text(decrypt_text_input, shift)
+			fmt.Println("Encrypted text:", encrypted)
+			play_again()
 
 		} else if user_input_lower == "d" {
-			fmt.Println("D")
+			fmt.Println("Type the word you want to decrypt : ")
+			decrypt_text_input := ""
+			_, err := fmt.Scanln(&decrypt_text_input)
+			if err != nil {
+				fmt.Println("Error : ", err)
+			}
+			decrypted := decrypt_text(decrypt_text_input, shift)
+			fmt.Println("Decrypted text:", decrypted)
 			play_again()
 
 		} else {
-			fmt.Println("Error")
+			fmt.Println("Invalid input.")
 			main()
 
 		}
