@@ -7,7 +7,8 @@ import (
 )
 
 var (
-	char = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+	char_values = " '~`!@#$%^&*()+_-={}|[]:;,./<>?ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"
+	shift       = 3
 )
 
 func play_again() {
@@ -34,6 +35,12 @@ func play_again() {
 		}
 	}
 }
+func encrypt_text(ecrypt_text string, shift int) {
+	for _, char := range ecrypt_text {
+
+	}
+
+}
 
 func main() {
 	fmt.Printf("Enter 'E' to encrypt and 'D' Decrypt : ")
@@ -47,8 +54,13 @@ func main() {
 
 		user_input_lower := strings.ToLower(user_input)
 		if user_input_lower == "e" {
-			fmt.Println("E")
-			play_again()
+			fmt.Println("Type the word you want to encrypt : ")
+			ecrypt_text := ""
+			_, err := fmt.Scanln(&ecrypt_text)
+			if err != nil {
+				fmt.Println("Error : ", err)
+			}
+			encrypt_text(ecrypt_text, shift)
 
 		} else if user_input_lower == "d" {
 			fmt.Println("D")
